@@ -20,4 +20,10 @@ public class CubeHistoryService {
     public CubeHistory getCubeHistory(Long id) {
         return cubeHistoryRepository.findOne(id);
     }
+
+    public Long save(CubeHistory cubeHistory) {
+        cubeHistoryRepository.save(cubeHistory);
+
+        return cubeHistory.getId();
+    }
 }

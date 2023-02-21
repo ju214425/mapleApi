@@ -23,4 +23,8 @@ public class CubeHistoryRepository {
     public CubeHistory findOne(Long id) {
         return em.find(CubeHistory.class, id);
     }
+
+    public void save(CubeHistory cubeHistory) {
+        em.persist(cubeHistory);
+    }
 }

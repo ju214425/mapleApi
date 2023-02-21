@@ -4,9 +4,7 @@ import MapleApi.MapleApi.domain.*;
 import MapleApi.MapleApi.service.CubeHistoryService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -61,5 +59,31 @@ public class CubeHistoryController {
 
         private Grade potentialOptionGrade;
         private Grade additionalPotentialOptionGrade;
+    }
+
+    @PostMapping("/cube-history")
+    public CreateCubeHistoryResponse createCubeHistory(@RequestBody CreateCubeHistoryRequest request) {
+        int count = request.getCount();
+        List<CubeHistory> cubeHistories = request.getCube_histories();
+
+        cubeHistories.forEach(cubeHistoryService::save);
+
+        return new CreateCubeHistoryResponse(count);
+    }
+
+    @Data
+    static class CreateCubeHistoryResponse {
+        private int count;
+
+        CreateCubeHistoryResponse(int count) {
+            this.count = count;
+        }
+    }
+
+    @Data
+    static class CreateCubeHistoryRequest {
+        private int count;
+        private List<CubeHistory> cube_histories;
+        private String next_cursor;
     }
 }

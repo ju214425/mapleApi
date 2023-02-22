@@ -2,11 +2,14 @@ package MapleApi.MapleApi.controller;
 
 import MapleApi.MapleApi.domain.*;
 import MapleApi.MapleApi.service.CubeHistoryService;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,10 +22,18 @@ public class CubeHistoryController {
     @GetMapping("/cube-history")
     public Result getMember() {
         List<CubeHistory> findCubeHistories = cubeHistoryService.getCubeHistories();
+
         List<CubeHistoryDto> collect = findCubeHistories.stream()
-                .map(ch -> new CubeHistoryDto(ch.getMember(), ch.getCreateDate(), ch.getCube(),
-                        ch.getItemUpgradeResult(), ch.getMiracleTimeFlag(), ch.getItem(),
-                        ch.getPotentialOptionGrade(), ch.getAdditionalPotentialOptionGrade()))
+                .map(ch -> CubeHistoryDto.builder()
+                        .member(ch.getMember())
+                        .createDate(ch.getCreateDate())
+                        .cube(ch.getCube())
+                        .itemUpgradeResult(ch.getItemUpgradeResult())
+                        .miracleTimeFlag(ch.getMiracleTimeFlag())
+                        .item(ch.getItem())
+                        .potentialOptionGrade(ch.getPotentialOptionGrade())
+                        .additionalPotentialOptionGrade(ch.getAdditionalPotentialOptionGrade())
+                        .build())
                 .collect(Collectors.toList());
 
         return new Result(collect.size(), collect);
@@ -31,9 +42,16 @@ public class CubeHistoryController {
     @GetMapping("/cube-history/{id}")
     public Result getMember(@PathVariable Long id) {
         CubeHistory ch = cubeHistoryService.getCubeHistory(id);
-        CubeHistoryDto cubeHistoryDto = new CubeHistoryDto(ch.getMember(), ch.getCreateDate(), ch.getCube(),
-                ch.getItemUpgradeResult(), ch.getMiracleTimeFlag(), ch.getItem(),
-                ch.getPotentialOptionGrade(), ch.getAdditionalPotentialOptionGrade());
+        CubeHistoryDto cubeHistoryDto = CubeHistoryDto.builder()
+                .member(ch.getMember())
+                .createDate(ch.getCreateDate())
+                .cube(ch.getCube())
+                .itemUpgradeResult(ch.getItemUpgradeResult())
+                .miracleTimeFlag(ch.getMiracleTimeFlag())
+                .item(ch.getItem())
+                .potentialOptionGrade(ch.getPotentialOptionGrade())
+                .additionalPotentialOptionGrade(ch.getAdditionalPotentialOptionGrade())
+                .build();
 
         return new Result(1, cubeHistoryDto);
     }
@@ -47,9 +65,10 @@ public class CubeHistoryController {
 
     @Data
     @AllArgsConstructor
+    @Builder
     static class CubeHistoryDto {
         private Member member;
-        private LocalDate createDate;
+        private OffsetDateTime createDate;
         private Cube cube;
 
         private String itemUpgradeResult;
@@ -62,11 +81,13 @@ public class CubeHistoryController {
     }
 
     @PostMapping("/cube-history")
-    public CreateCubeHistoryResponse createCubeHistory(@RequestBody CreateCubeHistoryRequest request) {
+    public CreateCubeHistoryResponse createCubeHistory(@RequestBody CreateCubeHistoriesRequest request) {
         int count = request.getCount();
-        List<CubeHistory> cubeHistories = request.getCube_histories();
+        List<CreateCubeHistoryRequest> cubeHistories = request.getCubeHistories();
 
-        cubeHistories.forEach(cubeHistoryService::save);
+        for(CreateCubeHistoryRequest ch : cubeHistories) {
+            cubeHistoryService.save(ch.toEntity());
+        }
 
         return new CreateCubeHistoryResponse(count);
     }
@@ -81,9 +102,51 @@ public class CubeHistoryController {
     }
 
     @Data
-    static class CreateCubeHistoryRequest {
+    @AllArgsConstructor
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    static class CreateCubeHistoriesRequest {
         private int count;
-        private List<CubeHistory> cube_histories;
-        private String next_cursor;
+        private List<CreateCubeHistoryRequest> cubeHistories;
+        private String nextCursor;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @Builder
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    static class CreateCubeHistoryRequest {
+        private Member member;
+        private OffsetDateTime createDate;
+        private Cube cube;
+
+        private String itemUpgradeResult;
+        private String miracleTimeFlag;
+
+        private Item item;
+
+        private Grade potentialOptionGrade;
+        private Grade additionalPotentialOptionGrade;
+
+        private List<CubeResultOption> beforePotentialOptionGrades;
+        private List<CubeResultOption> beforeAdditionalPotentialOptionGrades;
+        private List<CubeResultOption> afterPotentialOptionGrades;
+        private List<CubeResultOption> afterAdditionalPotentialOptionGrades;
+
+        public CubeHistory toEntity() {
+            return CubeHistory.builder()
+                    .member(member)
+                    .createDate(createDate)
+                    .cube(cube)
+                    .itemUpgradeResult(itemUpgradeResult)
+                    .miracleTimeFlag(miracleTimeFlag)
+                    .item(item)
+                    .potentialOptionGrade(potentialOptionGrade)
+                    .additionalPotentialOptionGrade(additionalPotentialOptionGrade)
+                    .beforePotentialOptionGrades(beforePotentialOptionGrades)
+                    .beforeAdditionalPotentialOptionGrades(beforeAdditionalPotentialOptionGrades)
+                    .afterPotentialOptionGrades(afterPotentialOptionGrades)
+                    .afterAdditionalPotentialOptionGrades(afterAdditionalPotentialOptionGrades)
+                    .build();
+        }
     }
 }

@@ -1,14 +1,16 @@
 package MapleApi.MapleApi.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Entity
 @Getter @Setter
+@Builder
 public class CubeHistory {
 
     @Id @GeneratedValue
@@ -19,7 +21,7 @@ public class CubeHistory {
     @JoinColumn(name = "user_id")
     private Member member;
 
-    private LocalDate createDate;
+    private OffsetDateTime createDate;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cube_id")

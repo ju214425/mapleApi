@@ -1,9 +1,9 @@
 package MapleApi.MapleApi.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -11,6 +11,8 @@ import java.util.List;
 @Entity
 @Getter @Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CubeHistory {
 
     @Id @GeneratedValue
@@ -18,14 +20,14 @@ public class CubeHistory {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
+    @Cascade(CascadeType.ALL)
     private Member member;
 
     private OffsetDateTime createDate;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cube_id")
-    private Cube cube;
+    @Enumerated(EnumType.STRING)
+    private CubeType cubeType;
 
     private String itemUpgradeResult;
     private String miracleTimeFlag;
@@ -33,7 +35,9 @@ public class CubeHistory {
     @Embedded
     private Item item;
 
+    @Enumerated(EnumType.STRING)
     private Grade potentialOptionGrade;
+    @Enumerated(EnumType.STRING)
     private Grade additionalPotentialOptionGrade;
 
     @ElementCollection
@@ -41,23 +45,23 @@ public class CubeHistory {
             @AttributeOverride(name = "value", column = @Column(name = "beforeUpValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "beforeUpGrade")),
     })
-    private List<CubeResultOption> beforePotentialOptionGrades;
+    private List<CubeResultOption> beforePotentialOptions;
     @ElementCollection
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "beforeDownValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "beforeDownGrade")),
     })
-    private List<CubeResultOption> beforeAdditionalPotentialOptionGrades;
+    private List<CubeResultOption> beforeAdditionalPotentialOptions;
     @ElementCollection
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "afterUpValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "afterUpGrade")),
     })
-    private List<CubeResultOption> afterPotentialOptionGrades;
+    private List<CubeResultOption> afterPotentialOptions;
     @ElementCollection
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "afterDownValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "afterDownGrade")),
     })
-    private List<CubeResultOption> afterAdditionalPotentialOptionGrades;
+    private List<CubeResultOption> afterAdditionalPotentialOptions;
 }

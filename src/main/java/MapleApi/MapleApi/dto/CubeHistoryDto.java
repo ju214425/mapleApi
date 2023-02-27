@@ -138,23 +138,22 @@ public class CubeHistoryDto {
         }
 
         public CubeHistoryServiceDto(CubeHistory cubeHistory) {
-            CubeHistoryServiceDto.builder()
-                    .characterName(cubeHistory.getMember().getName())
-                    .createDate(cubeHistory.getCreateDate())
-                    .cubeType(cubeHistory.getCubeType().getName())
-                    .itemUpgradeResult(cubeHistory.getItemUpgradeResult())
-                    .miracleTimeFlag(cubeHistory.getMiracleTimeFlag())
-                    .itemEquipPart(cubeHistory.getItem().getItemEquipPart())
-                    .itemLevel(cubeHistory.getItem().getItemLevel())
-                    .targetItem(cubeHistory.getItem().getTargetItem())
-                    .potentialOptionGrade(cubeHistory.getPotentialOptionGrade().getName())
-                    .additionalPotentialOptionGrade(cubeHistory.getAdditionalPotentialOptionGrade().getName())
-                    .beforePotentialOptionGrades(cubeHistory.getBeforePotentialOptions())
-                    .beforeAdditionalPotentialOptionGrades(cubeHistory.getBeforeAdditionalPotentialOptions())
-                    .afterPotentialOptionGrades(cubeHistory.getAfterPotentialOptions())
-                    .afterAdditionalPotentialOptionGrades(cubeHistory.getAfterAdditionalPotentialOptions())
-                    .build();
+            this.characterName = cubeHistory.getMember().getName();
+            this.createDate = cubeHistory.getCreateDate();
+            this.cubeType = cubeHistory.getCubeType().getName();
+            this.itemUpgradeResult = cubeHistory.getItemUpgradeResult();
+            this.miracleTimeFlag = cubeHistory.getMiracleTimeFlag();
+            this.itemEquipPart = cubeHistory.getItem().getItemEquipPart();
+            this.itemLevel = cubeHistory.getItem().getItemLevel();
+            this.targetItem = cubeHistory.getItem().getTargetItem();
+            this.potentialOptionGrade = cubeHistory.getPotentialOptionGrade().getName();
+            this.additionalPotentialOptionGrade = cubeHistory.getAdditionalPotentialOptionGrade().getName();
+            this.beforePotentialOptionGrades = cubeHistory.getBeforePotentialOptions();
+            this.beforeAdditionalPotentialOptionGrades = cubeHistory.getBeforeAdditionalPotentialOptions();
+            this.afterPotentialOptionGrades = cubeHistory.getAfterPotentialOptions();
+            this.afterAdditionalPotentialOptionGrades = cubeHistory.getAfterAdditionalPotentialOptions();
         }
+
         public CubeHistory toEntity(Member member, CubeType cubeType, Item item, Grade pog, Grade apog) {
             return CubeHistory.builder()
                     .member(member)

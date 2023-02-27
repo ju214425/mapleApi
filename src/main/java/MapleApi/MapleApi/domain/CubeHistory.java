@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -45,23 +46,30 @@ public class CubeHistory {
             @AttributeOverride(name = "value", column = @Column(name = "beforeUpValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "beforeUpGrade")),
     })
-    private List<CubeResultOption> beforePotentialOptions;
+    @Builder.Default
+    private List<CubeResultOption> beforePotentialOptions = new ArrayList<>();
+
     @ElementCollection
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "beforeDownValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "beforeDownGrade")),
     })
-    private List<CubeResultOption> beforeAdditionalPotentialOptions;
+    @Builder.Default
+    private List<CubeResultOption> beforeAdditionalPotentialOptions = new ArrayList<>();
+
     @ElementCollection
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "afterUpValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "afterUpGrade")),
     })
-    private List<CubeResultOption> afterPotentialOptions;
+    @Builder.Default
+    private List<CubeResultOption> afterPotentialOptions = new ArrayList<>();
+
     @ElementCollection
     @AttributeOverrides({
             @AttributeOverride(name = "value", column = @Column(name = "afterDownValue")),
             @AttributeOverride(name = "grade", column = @Column(name = "afterDownGrade")),
     })
-    private List<CubeResultOption> afterAdditionalPotentialOptions;
+    @Builder.Default
+    private List<CubeResultOption> afterAdditionalPotentialOptions = new ArrayList<>();
 }

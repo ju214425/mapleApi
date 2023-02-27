@@ -20,10 +20,9 @@ public class CubeHistoryService {
     public List<CubeHistoryServiceDto> getCubeHistories() {
         List<CubeHistoryServiceDto> cubeHistoryServiceDtoList = new ArrayList<>();
 
-        cubeHistoryRepository.findAll().forEach(ch -> {
-            System.out.println("ch.toString() = " + ch.toString());
-            cubeHistoryServiceDtoList.add(new CubeHistoryServiceDto(ch));
-        });
+        cubeHistoryRepository.findAll().forEach(ch ->
+                cubeHistoryServiceDtoList.add(new CubeHistoryServiceDto(ch))
+        );
 
         return cubeHistoryServiceDtoList;
     }

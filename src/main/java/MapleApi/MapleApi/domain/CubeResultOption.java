@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 public class CubeResultOption {
     private String value;
+    @Enumerated(EnumType.STRING)
     private Grade grade;
 
     protected CubeResultOption() {

@@ -16,7 +16,9 @@ public class CubeHistoryRepository {
     private final EntityManager em;
 
     public List<CubeHistory> findAll() {
-        String psql = "select ch from CubeHistory ch";
+        String psql = "select ch " +
+                "from CubeHistory ch " +
+                "join fetch ch.member";
         return em.createQuery(psql, CubeHistory.class).getResultList();
     }
 

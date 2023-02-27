@@ -2,12 +2,13 @@ package MapleApi.MapleApi.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
@@ -20,9 +21,8 @@ public class CubeHistory {
     @Column(name = "cube_history_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = LAZY, cascade = ALL)
     @JoinColumn(name = "member_id")
-    @Cascade(CascadeType.ALL)
     private Member member;
 
     private OffsetDateTime createDate;
